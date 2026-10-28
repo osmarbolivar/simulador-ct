@@ -9,7 +9,7 @@ La reforma simulada reparte el 80% de la bolsa anual de CT por población, como 
 - **Escenarios:** 144 combinaciones de variante de necesidad (NBI, baja densidad, ruralidad), β, λ y piso hold-harmless, con sus efectos sobre la desigualdad de las brechas residuales.
 - **Busca tu municipio:** cambio de la CT de cada uno de los 339 municipios en el escenario central (λ = 20%, β = 0,50, sin piso).
 
-Todas las cifras son resultados precalculados de la simulación del documento *Disparidades fiscales municipales y reforma igualadora de la Coparticipación Tributaria en Bolivia* (Anexo, Producto 3, 2026). La página no recalcula la fórmula.
+Todas las cifras son resultados precalculados de la simulación del documento *Disparidades fiscales municipales y reforma igualadora de la Coparticipación Tributaria en Bolivia* (2026). La página no recalcula la fórmula.
 
 ## Cómo leer los resultados
 
