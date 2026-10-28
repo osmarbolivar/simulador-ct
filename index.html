@@ -121,6 +121,7 @@ section + section { margin-top: 38px; }
 .ctl { display: grid; gap: 6px; border: 0; margin: 0; padding: 0; min-width: 0; }
 .ctl > legend, .ctl > label.cap { font-size: 12px; font-weight: 600; letter-spacing: .05em; text-transform: uppercase; color: var(--muted); padding: 0; margin-bottom: 6px; }
 .ctl .hint { font-size: 12px; color: var(--muted); }
+.gk { text-transform: none; font-size: 14px; }  /* keep β, λ lowercase inside uppercase legends */
 .seg { display: flex; flex-wrap: wrap; gap: 4px; background: var(--tint); border-radius: 8px; padding: 3px; }
 .seg label { flex: 1 1 auto; position: relative; }
 .seg input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }
@@ -148,6 +149,20 @@ select {
 .btn .mk { width: 10px; height: 10px; flex: none; }
 .btn .mk.c { border-radius: 50%; border: 2px solid var(--ink); }
 .btn .mk.r { background: var(--gold); transform: rotate(45deg) scale(.9); }
+
+.presets .hint { grid-column: 1 / -1; font-size: 12px; color: var(--muted); line-height: 1.4; }
+
+/* ---------- "cómo funciona" steps ---------- */
+.how { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+.step { background: var(--surface); border: 1px solid var(--rule); border-radius: var(--r); padding: 16px 16px 14px; display: grid; gap: 8px; align-content: start; min-width: 0; }
+.step .num {
+  width: 30px; height: 30px; border-radius: 50%; background: var(--accent); color: #fff;
+  display: grid; place-items: center; font-family: var(--font-display); font-weight: 700; font-size: 16px;
+}
+.step h3 { font-size: 18px; font-weight: 700; }
+.step p { font-size: 14.5px; color: var(--ink-2); line-height: 1.5; }
+.step p b { color: var(--ink); font-weight: 650; }
+.step .ex { background: var(--tint); border-radius: 8px; padding: 8px 10px; font-size: 13.5px; }
 
 .results { display: grid; gap: 18px; min-width: 0; }
 .cfgline { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; font-size: 14px; color: var(--ink-2); }
@@ -276,6 +291,11 @@ input[type="search"] {
 /* ---------- footer ---------- */
 footer { margin-top: 44px; border-top: 1px solid var(--rule); padding-block: 22px 34px; background: var(--surface); }
 footer h2 { font-size: 18px; font-weight: 700; margin-bottom: 10px; }
+footer h2.gap { margin-top: 28px; }
+.gloss { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px 28px; margin: 0; }
+.gloss div { min-width: 0; max-width: 68ch; }
+.gloss dt { font-weight: 650; font-size: 14px; color: var(--ink); }
+.gloss dd { margin: 2px 0 0; font-size: 14px; color: var(--ink-2); line-height: 1.45; }
 .caveats { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px 28px; padding: 0; margin: 0; list-style: none; font-size: 14px; color: var(--ink-2); }
 .caveats li { padding-left: 14px; position: relative; max-width: 68ch; }
 .caveats li::before { content: ""; position: absolute; left: 0; top: .62em; width: 6px; height: 6px; background: var(--muted); border-radius: 1px; }
@@ -288,11 +308,15 @@ footer h2 { font-size: 18px; font-weight: 700; margin-bottom: 10px; }
   .rail .ctl.full, .rail .presets { grid-column: 1 / -1; }
   .charts { grid-template-columns: minmax(0, 1fr); }
   .hero { grid-template-columns: minmax(0, 1fr); }
+  .how { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 @media (max-width: 760px) {
   .kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .explore { grid-template-columns: minmax(0, 1fr); }
-  .caveats { grid-template-columns: minmax(0, 1fr); }
+  .caveats, .gloss { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 560px) {
+  .how { grid-template-columns: minmax(0, 1fr); }
 }
 @media (max-width: 560px) {
   body { font-size: 14.5px; }
@@ -314,68 +338,103 @@ footer h2 { font-size: 18px; font-weight: 700; margin-bottom: 10px; }
     <div>
       <p class="eyebrow">Coparticipación Tributaria municipal · Bolivia · 339 municipios · 2014–2022</p>
       <h1>Simulador CT <span>80/20</span></h1>
-      <p class="hero-lede">La reforma reparte el 80&nbsp;% de la CT por población, como hoy, y el 20&nbsp;% según la brecha fiscal positiva de cada municipio. El total a distribuir no cambia.</p>
-      <p class="pre-note">Todas las cifras son resultados precalculados de la simulación del documento. El navegador no recalcula la fórmula; solo consulta la combinación elegida.</p>
+      <p class="hero-lede">Hoy la Coparticipación Tributaria (CT) se reparte entre los 339 municipios solo según cuántos habitantes tiene cada uno. Este simulador muestra qué habría pasado entre 2014 y 2022 si una parte se hubiera repartido según lo que a cada municipio le falta para dar servicios básicos.</p>
+      <p class="pre-note">Las cifras vienen de la simulación del estudio. La página solo las consulta; no recalcula nada.</p>
     </div>
     <div class="formula" role="note" aria-label="Fórmula de distribución">
-      <span class="lbl">Fórmula dual</span>
+      <span class="lbl">La fórmula en una línea</span>
       <div class="eq">CT<sub><var>i</var></sub><sup>ref</sup> = (1 − <var>λ</var>) · CT<sub><var>t</var></sub> · <span>Pob<sub><var>i</var></sub> / ΣPob</span> + <var>λ</var> · CT<sub><var>t</var></sub> · <span>G<sup>+</sup><sub><var>i</var></sub> / ΣG<sup>+</sup></span></div>
-      <p class="def"><b>G<sup>+</sup><sub><var>i</var></sub></b> = máx(0, Necesidad − Capacidad) × Pob<sub><var>i</var></sub>. <b>Necesidad</b> = gasto per cápita promedio de los 3 años previos × (1 + <var>β</var>·<var>X</var>), con <var>X</var> = pobreza NBI, índice de baja densidad (IBD) o ruralidad (AR). <b>λ</b> = 20&nbsp;% en el escenario central. Evaluación: brecha residual per cápita tras CT + IDH + HIPC II.</p>
+      <p class="def"><b>En palabras:</b> cada municipio <var>i</var> recibe su parte del 80&nbsp;% según su población (Pob), más su parte del 20&nbsp;% según el tamaño de su brecha fiscal (G<sup>+</sup>). <b>CT<sub><var>t</var></sub></b> es el total de CT del año, que no cambia. <b><var>λ</var></b> es la parte que se reparte por brecha (20&nbsp;%). <b>G<sup>+</sup></b> es lo que el municipio necesita gastar menos lo que recauda por su cuenta, en bolivianos; si recauda lo suficiente, vale cero.</p>
     </div>
   </div>
 </header>
 
 <main class="gut">
   <div class="inner">
+    <section id="como" aria-labelledby="h-como">
+      <div class="sec-head">
+        <h2 id="h-como">Cómo funciona, en cuatro pasos</h2>
+        <p>No hace falta ser economista: estas son las cuatro ideas detrás de los números.</p>
+      </div>
+      <ol class="how">
+        <li class="step">
+          <span class="num">1</span>
+          <h3>Hoy: se reparte por población</h3>
+          <p>Cada municipio recibe CT según cuántos habitantes tiene. Dos municipios con la misma población reciben lo mismo, aunque uno sea mucho más pobre o recaude mucho menos que el otro.</p>
+        </li>
+        <li class="step">
+          <span class="num">2</span>
+          <h3>La brecha fiscal: lo que falta</h3>
+          <p><b>Necesidad de gasto</b> (cuánto cuesta dar servicios básicos) menos <b>capacidad fiscal propia</b> (lo que el municipio recauda con sus impuestos y tasas).</p>
+          <p class="ex">Ejemplo: necesita Bs 1.200 por habitante y recauda Bs 200 → su brecha es de <b>Bs 1.000</b> por habitante.</p>
+        </li>
+        <li class="step">
+          <span class="num">3</span>
+          <h3>La reforma: 80 + 20</h3>
+          <p>De cada Bs 100 de CT, <b>80</b> se siguen repartiendo por población y <b>20</b> según la brecha: a mayor brecha, mayor parte. El total no cambia: lo que unos municipios ganan, otros lo ceden.</p>
+        </li>
+        <li class="step">
+          <span class="num">4</span>
+          <h3>Cómo saber si mejora</h3>
+          <p>Se mira lo que a cada municipio todavía le falta <b>después de todas las transferencias</b>. Si esas brechas quedan más parecidas entre municipios, la reforma los acerca: la desigualdad baja.</p>
+        </li>
+      </ol>
+    </section>
+
     <section id="escenarios" aria-labelledby="h-esc">
       <div class="sec-head">
-        <h2 id="h-esc">Escenarios de la reforma</h2>
-        <p>144 combinaciones de variante, β, λ y piso hold-harmless, simuladas año por año sobre 2014–2022.</p>
+        <h2 id="h-esc">Pruebe distintas opciones</h2>
+        <p>Elija las opciones de la izquierda y vea cómo cambian los resultados. Hay 144 combinaciones, simuladas año por año entre 2014 y 2022.</p>
       </div>
       <div class="layout">
         <form class="rail" id="controls" aria-label="Parámetros del escenario" onsubmit="return false">
           <fieldset class="ctl full">
-            <legend>Variante de necesidad</legend>
+            <legend>¿Qué aumenta la necesidad?</legend>
             <div class="seg stack" id="c-variant">
-              <label><input type="radio" name="variant" value="nbi_weighted" id="v-nbi" checked><span><i class="sw" style="background:var(--s-nbi)"></i>Pobreza NBI</span></label>
-              <label><input type="radio" name="variant" value="density_adjusted" id="v-ibd"><span><i class="sw" style="background:var(--s-ibd)"></i>Baja densidad (IBD)</span></label>
-              <label><input type="radio" name="variant" value="rurality_proxy" id="v-ar"><span><i class="sw" style="background:var(--s-ar)"></i>Ruralidad (AR)</span></label>
+              <label><input type="radio" name="variant" value="nbi_weighted" id="v-nbi" checked><span><i class="sw" style="background:var(--s-nbi)"></i>Pobreza (NBI)</span></label>
+              <label><input type="radio" name="variant" value="density_adjusted" id="v-ibd"><span><i class="sw" style="background:var(--s-ibd)"></i>Población dispersa (IBD)</span></label>
+              <label><input type="radio" name="variant" value="rurality_proxy" id="v-ar"><span><i class="sw" style="background:var(--s-ar)"></i>Población rural (AR)</span></label>
             </div>
+            <span class="hint">La necesidad parte de lo que el municipio gastó en los 3 años anteriores y se reconoce mayor si es más pobre, más disperso o más rural.</span>
           </fieldset>
           <fieldset class="ctl">
-            <legend>β · peso estructural</legend>
+            <legend><span class="gk">β</span> · cuánto pesa ese ajuste</legend>
             <div class="seg" id="c-beta">
               <label><input type="radio" name="beta" value="0.25" id="b-025"><span>0,25</span></label>
               <label><input type="radio" name="beta" value="0.5" id="b-050" checked><span>0,50</span></label>
               <label><input type="radio" name="beta" value="0.75" id="b-075"><span>0,75</span></label>
               <label><input type="radio" name="beta" value="1" id="b-100"><span>1,00</span></label>
             </div>
+            <span class="hint">Con 0,50, un municipio 100&nbsp;% pobre (o disperso, o rural) tiene una necesidad reconocida 50&nbsp;% mayor que otro con igual gasto pero sin esa condición.</span>
           </fieldset>
           <fieldset class="ctl">
-            <legend>λ · componente igualador</legend>
+            <legend><span class="gk">λ</span> · parte repartida por brecha</legend>
             <div class="seg" id="c-lam">
               <label><input type="radio" name="lam" value="0.1" id="l-10"><span>10&nbsp;%</span></label>
               <label><input type="radio" name="lam" value="0.2" id="l-20" checked><span>20&nbsp;%</span></label>
               <label><input type="radio" name="lam" value="0.3" id="l-30"><span>30&nbsp;%</span></label>
               <label><input type="radio" name="lam" value="0.4" id="l-40"><span>40&nbsp;%</span></label>
             </div>
+            <span class="hint">20&nbsp;% = de cada Bs 100 de CT, Bs 20 se reparten según la brecha y Bs 80 por población.</span>
           </fieldset>
           <fieldset class="ctl">
-            <legend>Piso hold-harmless</legend>
+            <legend>Piso de protección</legend>
             <div class="seg" id="c-floor">
               <label><input type="radio" name="floor" value="none" id="f-none" checked><span>Ninguno</span></label>
               <label><input type="radio" name="floor" value="0.90" id="f-90"><span>90&nbsp;%</span></label>
               <label><input type="radio" name="floor" value="0.95" id="f-95"><span>95&nbsp;%</span></label>
             </div>
-            <span class="hint">Nadie recibe menos que ese porcentaje de su CT observada.</span>
+            <span class="hint">Ningún municipio recibe menos de ese porcentaje de la CT que recibe hoy. Protege a quienes pierden, pero reduce el efecto de la reforma.</span>
           </fieldset>
           <div class="ctl">
             <label class="cap" for="c-year">Año</label>
             <select id="c-year"></select>
+            <span class="hint">«Promedio» resume los nueve años.</span>
           </div>
           <div class="presets">
             <button type="button" class="btn" id="p-central"><i class="mk c"></i>Escenario central</button>
             <button type="button" class="btn" id="p-rec"><i class="mk r"></i>Configuración recomendada</button>
+            <span class="hint full">Central: 20&nbsp;% por brecha, β 0,50, sin piso. Recomendada: la propuesta del estudio, con pobreza (NBI), 20&nbsp;%, β 0,50 y piso de 95&nbsp;%.</span>
           </div>
         </form>
 
@@ -385,15 +444,15 @@ footer h2 { font-size: 18px; font-weight: 700; margin-bottom: 10px; }
           <div class="kpis" id="kpis"></div>
           <div class="charts">
             <div class="card">
-              <h3>Cambio del Gini de la brecha residual, por año</h3>
-              <p class="c-sub" id="a-sub">Variación porcentual frente al sistema actual. Valores negativos = menor desigualdad.</p>
+              <h3>¿Cuánto baja la desigualdad cada año?</h3>
+              <p class="c-sub" id="a-sub">Cambio del índice de Gini de lo que falta a los municipios, frente a la regla actual. Bajo la línea del 0 = municipios más parejos.</p>
               <div class="legend" id="a-legend"></div>
               <div class="chart" id="chartA"></div>
               <details class="tbl"><summary>Ver tabla</summary><div class="tbl-wrap" id="a-table"></div></details>
             </div>
             <div class="card">
-              <h3>Igualación frente a pérdida individual</h3>
-              <p class="c-sub">Las 144 configuraciones, promedio 2014–2022. Eje vertical: Δ Gini (más abajo, más igualación). Haz clic en un punto para seleccionarlo.</p>
+              <h3>¿Cuánta igualdad se gana y cuánto puede perder un municipio?</h3>
+              <p class="c-sub">Cada punto es una combinación de opciones (promedio 2014–2022). Más abajo = más igualdad; más a la derecha = algún municipio pierde más. Lo deseable está abajo a la izquierda. Haga clic en un punto para elegirlo.</p>
               <div class="legend">
                 <span><i class="dot" style="background:var(--s-nbi)"></i>NBI</span>
                 <span><i class="dot" style="background:var(--s-ibd)"></i>IBD</span>
@@ -411,16 +470,16 @@ footer h2 { font-size: 18px; font-weight: 700; margin-bottom: 10px; }
     <section id="municipio" aria-labelledby="h-mun">
       <div class="sec-head">
         <h2 id="h-mun">Busca tu municipio</h2>
-        <p>Escenario central: λ = 20&nbsp;%, β = 0,50, sin piso. Cambio de la CT de cada municipio frente a la CT observada.</p>
+        <p>Cuánta CT recibiría cada municipio con la reforma central (20&nbsp;% repartido por brecha, β 0,50, sin piso), frente a lo que recibió. Haga clic en el mapa o escriba un nombre.</p>
       </div>
       <div class="toolbar">
         <fieldset class="ctl">
-          <legend>Variante</legend>
+          <legend>¿Qué aumenta la necesidad?</legend>
           <div class="seg" id="m-variant">
-            <label><input type="radio" name="mvar" value="simple" id="mv-simple"><span><i class="sw" style="background:var(--s-simple)"></i>Simple</span></label>
-            <label><input type="radio" name="mvar" value="nbi" id="mv-nbi" checked><span><i class="sw" style="background:var(--s-nbi)"></i>NBI</span></label>
-            <label><input type="radio" name="mvar" value="density" id="mv-ibd"><span><i class="sw" style="background:var(--s-ibd)"></i>IBD</span></label>
-            <label><input type="radio" name="mvar" value="rurality" id="mv-ar"><span><i class="sw" style="background:var(--s-ar)"></i>AR</span></label>
+            <label><input type="radio" name="mvar" value="simple" id="mv-simple"><span><i class="sw" style="background:var(--s-simple)"></i>Sin ajuste</span></label>
+            <label><input type="radio" name="mvar" value="nbi" id="mv-nbi" checked><span><i class="sw" style="background:var(--s-nbi)"></i>Pobreza</span></label>
+            <label><input type="radio" name="mvar" value="density" id="mv-ibd"><span><i class="sw" style="background:var(--s-ibd)"></i>Dispersión</span></label>
+            <label><input type="radio" name="mvar" value="rurality" id="mv-ar"><span><i class="sw" style="background:var(--s-ar)"></i>Ruralidad</span></label>
           </div>
         </fieldset>
         <div class="ctl year">
@@ -456,13 +515,31 @@ footer h2 { font-size: 18px; font-weight: 700; margin-bottom: 10px; }
 
 <footer class="gut">
   <div class="inner">
-    <h2>Cómo leer estos resultados</h2>
+    <h2>Glosario en palabras simples</h2>
+    <dl class="gloss">
+      <div><dt>CT · Coparticipación Tributaria</dt><dd>Parte de los impuestos nacionales (20&nbsp;% de la recaudación) que el Estado transfiere a los municipios, hoy según su población.</dd></div>
+      <div><dt>IDH y HIPC II</dt><dd>Otras transferencias que reciben los municipios: el Impuesto Directo a los Hidrocarburos y el alivio de deuda HIPC II (hasta 2016). En la simulación no cambian.</dd></div>
+      <div><dt>Necesidad de gasto</dt><dd>Cuánto le cuesta al municipio dar servicios básicos. Se estima con lo que gastó en los tres años anteriores, ajustado según pobreza, dispersión o ruralidad.</dd></div>
+      <div><dt>Capacidad fiscal propia</dt><dd>Lo que el municipio recauda por su cuenta con impuestos y tasas locales, en promedio de los tres años anteriores.</dd></div>
+      <div><dt>Brecha fiscal</dt><dd>Necesidad menos capacidad: lo que al municipio le falta. Nunca es negativa; si recauda lo suficiente, es cero.</dd></div>
+      <div><dt>Brecha que queda (residual)</dt><dd>Lo que todavía falta después de recibir la CT, el IDH y el HIPC II. Es lo que la reforma busca emparejar.</dd></div>
+      <div><dt>NBI</dt><dd>Necesidades Básicas Insatisfechas: porcentaje de hogares pobres según el Censo 2012.</dd></div>
+      <div><dt>IBD y AR</dt><dd>Índice de baja densidad (población muy dispersa en el territorio) y proporción de población rural, ambos del Censo 2012.</dd></div>
+      <div><dt>λ (lambda)</dt><dd>Parte de la CT que se reparte según la brecha. Con 20&nbsp;%, de cada Bs 100, Bs 20 van por brecha.</dd></div>
+      <div><dt>β (beta)</dt><dd>Cuánto aumenta la necesidad reconocida por ser pobre, disperso o rural. Con 0,50, hasta 50&nbsp;% más.</dd></div>
+      <div><dt>Piso de protección</dt><dd>Garantía de que ningún municipio reciba menos de cierto porcentaje (90&nbsp;% o 95&nbsp;%) de su CT actual.</dd></div>
+      <div><dt>Índice de Gini</dt><dd>Mide la desigualdad de 0 (todos iguales) a 1 (máxima desigualdad). Si baja, los municipios quedan más parejos.</dd></div>
+      <div><dt>Coeficiente de variación</dt><dd>Qué tan lejos están, en promedio, los municipios del valor medio. Si baja, están más cerca unos de otros.</dd></div>
+      <div><dt>p10, mediana y p90</dt><dd>Ordenando a los municipios de menor a mayor cambio: el 10&nbsp;% queda bajo el p10, la mitad bajo la mediana y el 90&nbsp;% bajo el p90.</dd></div>
+    </dl>
+
+    <h2 class="gap">Cómo leer estos resultados</h2>
     <ul class="caveats">
-      <li>Es una simulación contrafactual de equilibrio parcial: aplica la fórmula a los datos observados de 2014–2022 y no modela respuestas de comportamiento de los municipios.</li>
-      <li>Capacidad fiscal y necesidad de gasto son proxies operativas. El ingreso propio observado no es capacidad pura y el gasto observado no es necesidad pura.</li>
-      <li>Las variables estructurales (NBI, densidad, ruralidad) provienen del Censo 2012. El Censo 2024 puede cambiar quiénes ganan y quiénes pierden.</li>
-      <li>La desigualdad se mide sobre la brecha residual per cápita después de todas las transferencias (CT + IDH + HIPC II). Un cambio negativo indica menor desigualdad.</li>
-      <li>«Promedio 2014–2022» es el promedio simple de los cambios anuales; la pérdida máxima corresponde al peor año del período.</li>
+      <li>Es una simulación: aplica la fórmula a los datos reales de 2014–2022, pero no considera cómo habrían reaccionado los municipios (por ejemplo, recaudando o gastando distinto).</li>
+      <li>Necesidad y capacidad son aproximaciones: lo que un municipio gastó o recaudó no es exactamente lo que necesita o lo que podría recaudar.</li>
+      <li>Pobreza, densidad y ruralidad vienen del Censo 2012. Con los datos del Censo 2024, algunos municipios que ganan o pierden podrían cambiar.</li>
+      <li>La desigualdad se mide sobre lo que falta después de todas las transferencias (CT, IDH y HIPC II). Un cambio negativo significa municipios más parejos.</li>
+      <li>«Promedio 2014–2022» es el promedio de los cambios de cada año; la mayor pérdida corresponde al peor año del período.</li>
       <li id="datanote">El mapa usa 344 polígonos: 339 municipios del análisis y 5 lagos o salares sin dato. Hay 13 casos municipio-año con CT observada igual a cero, cuyo cambio porcentual no está definido.</li>
     </ul>
     <p class="source">Fuente: <cite>Disparidades fiscales municipales y reforma igualadora de la CT en Bolivia</cite> (Anexo, Producto 3, 2026). Resultados de la simulación 2014–2022.</p>
@@ -501,9 +578,9 @@ footer h2 { font-size: 18px; font-weight: 700; margin-bottom: 10px; }
 
   /* ---------- labels ---------- */
   const VAR_LABEL = { nbi_weighted: "NBI", density_adjusted: "IBD", rurality_proxy: "AR" };
-  const VAR_LONG = { nbi_weighted: "Pobreza NBI", density_adjusted: "Baja densidad (IBD)", rurality_proxy: "Ruralidad (AR)" };
+  const VAR_LONG = { nbi_weighted: "Pobreza (NBI)", density_adjusted: "Población dispersa (IBD)", rurality_proxy: "Población rural (AR)" };
   const VAR_COLOR = { nbi_weighted: "var(--s-nbi)", density_adjusted: "var(--s-ibd)", rurality_proxy: "var(--s-ar)" };
-  const MV_LABEL = { simple: "Simple", nbi: "NBI", density: "IBD", rurality: "AR" };
+  const MV_LABEL = { simple: "sin ajuste", nbi: "pobreza (NBI)", density: "dispersión (IBD)", rurality: "ruralidad (AR)" };
   const MV_COLOR = { simple: "var(--s-simple)", nbi: "var(--s-nbi)", density: "var(--s-ibd)", rurality: "var(--s-ar)" };
   const floorLabel = (f) => (f === "none" ? "sin piso" : "piso " + fnum(+f * 100, 0) + NN + "%");
   const CENTRAL = { b: 0.5, l: 0.2, f: "none" };
@@ -582,28 +659,28 @@ footer h2 { font-size: 18px; font-weight: 700; margin-bottom: 10px; }
     // reading sentence
     const dir = m.gini < 0 ? "baja" : "sube";
     const lossTxt = st.f !== "none"
-      ? `el piso limita la pérdida de cualquier municipio a <b>${fpct(-m.maxloss, 0, false)}</b> de su CT`
-      : `la mayor pérdida individual llega a <b>${fpct(-m.maxloss, 1, false)}</b> de la CT${m.avg ? " (peor año)" : ""}`;
-    $("#reading").innerHTML = `Con esta configuración, el Gini de la brecha residual ${dir} <b>${fpct(Math.abs(m.gini), 2, false)}</b>${m.avg ? " en promedio" : " en " + st.y}; ${fnum(m.losing, m.avg ? 1 : 0)} de ${N_MUN} municipios reciben menos CT y ${lossTxt}.`;
+      ? `gracias al piso, ninguno pierde más de <b>${fpct(-m.maxloss, 0, false)}</b> de su CT`
+      : `el municipio que más pierde ve bajar su CT en <b>${fpct(-m.maxloss, 1, false)}</b>${m.avg ? " (en el peor año)" : ""}`;
+    $("#reading").innerHTML = `<b>En resumen:</b> con estas opciones, la desigualdad entre municipios en lo que les falta ${dir} <b>${fpct(Math.abs(m.gini), 2, false)}</b>${m.avg ? " en promedio" : " en " + st.y} (índice de Gini). ${m.avg ? "Unos " : ""}${fnum(m.losing, 0)} de ${N_MUN} municipios reciben menos CT que hoy${m.avg ? " cada año" : ""} y ${lossTxt}.`;
 
-    // KPI tiles
+    // KPI tiles (labels in plain language; technical name in parentheses)
     const lvl = (a, b, dec) => `${fnum(a, dec)} → ${fnum(b, dec)}`;
     const tiles = [
-      { lbl: "Δ Gini de la brecha residual", val: fpct(m.gini, 2), chip: ineqChip(m.gini),
-        sub: m.avg ? "Promedio de los cambios anuales" : `Gini ${lvl(m.g0, m.g1, 3)}` },
-      { lbl: "Δ Coeficiente de variación", val: fpct(m.cv, 2), chip: ineqChip(m.cv),
-        sub: m.avg ? "Promedio de los cambios anuales" : `CV ${lvl(m.c0, m.c1, 2)}` },
-      { lbl: "Δ Brecha residual media", val: fpct(m.mean, 2), chip: ineqChip(m.mean),
-        sub: m.avg ? "Bs por habitante, promedio de cambios" : `Bs/hab ${lvl(m.m0, m.m1, 0)}` },
-      { lbl: "Municipios que pierden CT", val: fnum(m.losing, m.avg ? 1 : 0), chip: "",
-        sub: m.avg ? `de ${N_MUN}, promedio anual` : `de ${N_MUN} municipios` },
-      { lbl: "Pérdida máxima individual", val: fpct(m.maxloss, 1), chip: st.f !== "none" ? `<span class="chip neu">acotada por el piso</span>` : "",
-        sub: m.avg ? "Peor año del período" : `Ganancia máxima ${fpct(m.maxgain, 0)}` },
+      { lbl: "Desigualdad entre municipios (índice de Gini)", val: fpct(m.gini, 2), chip: ineqChip(m.gini),
+        sub: m.avg ? "Cambio frente a la regla actual; negativo = más parejos" : `Pasa de ${lvl(m.g0, m.g1, 3)} (0 = todos iguales, 1 = máxima desigualdad)` },
+      { lbl: "Distancia al promedio (coeficiente de variación)", val: fpct(m.cv, 2), chip: ineqChip(m.cv),
+        sub: m.avg ? "Qué tan lejos están los municipios del valor medio; negativo = más cerca" : `Pasa de ${lvl(m.c0, m.c1, 2)}` },
+      { lbl: "Lo que falta en promedio (brecha que queda)", val: fpct(m.mean, 2), chip: ineqChip(m.mean),
+        sub: m.avg ? "Bs por habitante, después de todas las transferencias" : `Pasa de Bs ${lvl(m.m0, m.m1, 0)} por habitante` },
+      { lbl: "Municipios que reciben menos CT", val: fnum(m.losing, 0), chip: "",
+        sub: m.avg ? `de ${N_MUN}, promedio por año` : `de ${N_MUN} municipios` },
+      { lbl: "La mayor pérdida de un municipio", val: fpct(m.maxloss, 1), chip: st.f !== "none" ? `<span class="chip neu">limitada por el piso</span>` : "",
+        sub: m.avg ? "En el peor año del período" : `La mayor ganancia: ${fpct(m.maxgain, 0)}` },
     ];
     let html = tiles.map((t) => `<div class="kpi"><span class="k-lbl">${t.lbl}</span><div class="k-row"><span class="k-val">${t.val}</span>${t.chip}</div><span class="k-sub">${t.sub}</span></div>`).join("");
-    html += `<div class="kpi span2"><span class="k-lbl">Cambio de la CT por municipio${m.avg ? " (promedio anual)" : ""}</span>
-      <div class="dist"><div><small>p10</small><b>${fpct(m.p10, 1)}</b></div><div><small>Mediana</small><b>${fpct(m.med, 1)}</b></div><div><small>p90</small><b>${fpct(m.p90, 1)}</b></div></div>
-      ${stripSVG(m)}<span class="k-sub">El 80&nbsp;% central de los municipios cae entre p10 y p90</span></div>`;
+    html += `<div class="kpi span2"><span class="k-lbl">Cómo cambia la CT de los municipios${m.avg ? " (promedio por año)" : ""}</span>
+      <div class="dist"><div><small>Bajo · p10</small><b>${fpct(m.p10, 1)}</b></div><div><small>Típico · mediana</small><b>${fpct(m.med, 1)}</b></div><div><small>Alto · p90</small><b>${fpct(m.p90, 1)}</b></div></div>
+      ${stripSVG(m)}<span class="k-sub">8 de cada 10 municipios cambian entre «bajo» y «alto»; la mitad cambia más que el valor típico</span></div>`;
     $("#kpis").innerHTML = html;
 
     drawLine(m);
@@ -745,7 +822,7 @@ footer h2 { font-size: 18px; font-weight: 700; margin-bottom: 10px; }
       s += `<line class="grid" x1="${X(v)}" x2="${X(v)}" y1="${mg.t}" y2="${H - mg.b}"/>`;
       s += `<text x="${X(v)}" y="${H - mg.b + 15}" text-anchor="middle">${fnum(v, 0)}${NN}%</text>`;
     });
-    s += `<text class="title" x="${(mg.l + W - mg.r) / 2}" y="${H - 4}" text-anchor="middle">Pérdida máxima individual de CT (peor año) →</text>`;
+    s += `<text class="title" x="${(mg.l + W - mg.r) / 2}" y="${H - 4}" text-anchor="middle">La mayor pérdida de un municipio (peor año) →</text>`;
     s += `</g>`;
     PTS.forEach((p, i) => {
       s += `<circle cx="${X(p.x).toFixed(1)}" cy="${Y(p.y).toFixed(1)}" r="4.5" style="fill:${VAR_COLOR[p.v]};stroke:var(--surface)" stroke-width="1.5" fill-opacity=".9"/>`;
@@ -838,25 +915,25 @@ footer h2 { font-size: 18px; font-weight: 700; margin-bottom: 10px; }
     const bar = (v, c) => `<div class="bar"><span style="width:${(100 * v / maxGap).toFixed(1)}%;background:${c}"></span></div>`;
     const gapNote = r.bp === 0 && r.rp === 0
       ? "Sin brecha residual positiva después de transferencias en ambos casos."
-      : r.rp < r.bp ? `La reforma reduce la brecha residual en ${fbs(r.bp - r.rp)} por habitante.`
-      : r.rp > r.bp ? `La brecha residual aumenta en ${fbs(r.rp - r.bp)} por habitante.` : "La brecha residual no cambia.";
+      : r.rp < r.bp ? `Con la reforma, a este municipio le faltan ${fbs(r.bp - r.rp)} menos por habitante.`
+      : r.rp > r.bp ? `Con la reforma, a este municipio le faltan ${fbs(r.rp - r.bp)} más por habitante.` : "Con la reforma, lo que le falta no cambia.";
     $("#mcard").innerHTML = `
       <div class="m-head">
         <span class="eyebrow">${esc(D.muni.dep[i])} · código INE ${D.muni.cod[i]}</span>
         <h3>${esc(D.muni.name[i])}</h3>
-        <div class="meta"><span>NBI 2012: <b>${fnum(D.muni.nbi[i], 1)}${NN}%</b></span><span>Población ${ms.y}: <b>${fnum(r.pop, 0)}</b></span><span>Variante ${MV_LABEL[ms.v]}</span></div>
+        <div class="meta"><span>Hogares pobres (NBI 2012): <b>${fnum(D.muni.nbi[i], 1)}${NN}%</b></span><span>Población ${ms.y}: <b>${fnum(r.pop, 0)}</b></span><span>Ajuste: ${MV_LABEL[ms.v]}</span></div>
         ${pill}
       </div>
       <div class="m-grid">
-        <div><small>CT observada ${ms.y}</small><b>${fbs(r.ct)}</b></div>
+        <div><small>CT que recibió en ${ms.y}</small><b>${fbs(r.ct)}</b></div>
         <div><small>CT con la reforma</small><b>${fbs(r.rf)}</b></div>
-        <div><small>Cambio en Bs</small><b>${(r.d > 0 ? "+" : "") + fbs(r.d)}</b></div>
-        <div><small>Cambio en %</small><b>${r.p == null ? "n/d" : fpct(r.p, 1)}</b></div>
-        <div class="wide"><small>Cambio por habitante</small><b>${(r.d > 0 ? "+" : "")}${fnum(r.d / r.pop, 0)} Bs/hab</b></div>
+        <div><small>Diferencia en Bs</small><b>${(r.d > 0 ? "+" : "") + fbs(r.d)}</b></div>
+        <div><small>Diferencia en %</small><b>${r.p == null ? "n/d" : fpct(r.p, 1)}</b></div>
+        <div class="wide"><small>Diferencia por habitante</small><b>${(r.d > 0 ? "+" : "")}${fnum(r.d / r.pop, 0)} Bs/hab</b></div>
       </div>
       <div class="gapbars">
-        <span class="gb-h">Brecha residual tras CT + IDH + HIPC II (Bs/hab)</span>
-        <div class="gb-row"><span>Actual</span>${bar(r.bp, "var(--base)")}<b>${fnum(r.bp, 0)}</b></div>
+        <span class="gb-h">Lo que le falta para cubrir su necesidad, después de la CT, el IDH y el HIPC II (Bs por habitante)</span>
+        <div class="gb-row"><span>Hoy</span>${bar(r.bp, "var(--base)")}<b>${fnum(r.bp, 0)}</b></div>
         <div class="gb-row"><span>Reforma</span>${bar(r.rp, MV_COLOR[ms.v])}<b>${fnum(r.rp, 0)}</b></div>
         <p class="m-note">${gapNote}</p>
       </div>`;
